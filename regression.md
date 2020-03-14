@@ -99,7 +99,7 @@ cross_val_score(reg,X,y,cv=5,scoring=make_scorer(bias))
 
 # Evaluation
 
-# Train/Test Split
+## Train/Test Split
 ```python
 # Load the library
 from sklearn.model_selection import train_test_split
