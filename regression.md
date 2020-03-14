@@ -92,7 +92,8 @@ from sklearn.metrics import make_scorer
 def bias(pred,y_test):
 return np.mean(pred-y_test)
 
-# Put the scorer in cross_val_score cross_val_score(reg,X,y,cv=5,scoring=make_scorer(bias))
+# Put the scorer in cross_val_score
+cross_val_score(reg,X,y,cv=5,scoring=make_scorer(bias))
 ```
 
 
