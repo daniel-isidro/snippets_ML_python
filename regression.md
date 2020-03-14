@@ -152,7 +152,9 @@ reg_dt_test = RandomizedSearchCV(DecisionTreeRegressor(),
                                  n_iter=20
                                 )
 
+# Fit will test all of the combinations
 reg_dt_test.fit(X,y)
+
+# Best estimator and best parameters
 reg_dt_test.best_params_
 reg_dt_test.best_score_
-
