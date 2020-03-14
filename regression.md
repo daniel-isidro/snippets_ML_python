@@ -9,7 +9,6 @@ y = df["SalePrice"] # pandas Series
 
 # Models
 ## Linear Regression
-
 ```python
 # Load the library
 from sklearn.linear_model import LinearRegression
@@ -23,6 +22,7 @@ reg.fit(X,y)
 # Do predictions
 reg.predict([[2540],[3500],[4000]])
 ```
+
 ## K-near Neighbors
 ```python
 # Load the library
@@ -69,6 +69,7 @@ from sklearn.metrics import mean_squared_error
 
 # Use against predictions (we must calculate the square root of the MSE)
 np.sqrt(mean_squared_error(reg.predict(X_test),y_test))
+```
 
 ## Correlation
 ```python
@@ -79,6 +80,7 @@ from sklearn.model_selection import cross_val_score
 
 # With cv=5, we will have 5 results from 5 training/test
 cross_val_score(reg,X,y,cv=5,scoring="neg_mean_squared_error")
+```
 
 ## Bias
 ```python
@@ -91,6 +93,7 @@ def bias(pred,y_test):
 return np.mean(pred-y_test)
 
 # Put the scorer in cross_val_score cross_val_score(reg,X,y,cv=5,scoring=make_scorer(bias))
+```
 
 
 # Evaluation
@@ -116,6 +119,7 @@ from sklearn.model_selection import cross_val_score
 
 # With cv=5, we will have 5 results from 5 training/test
 cross_val_score(reg,X,y,cv=5,scoring="neg_mean_squared_error")
+```
 
 ## Grid Search
 ```python
@@ -134,5 +138,21 @@ reg_test.fit(X,y)
 reg_test.best_score_
 reg_test.best_estimator_
 reg_test.best_params_
+```
 
 ## Randomized Search
+```python
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.tree import DecisionTreeRegressor
+reg_dt_test = RandomizedSearchCV(DecisionTreeRegressor(),
+                                param_distributions={"max_depth":[2,3,5,8,10],
+                                           "min_samples_leaf":[5,10,15,20,30,40]},
+                                 cv=5,
+                                 scoring="neg_mean_absolute_error",
+                                 n_iter=20
+                                )
+
+reg_dt_test.fit(X,y)
+reg_dt_test.best_params_
+reg_dt_test.best_score_
+
