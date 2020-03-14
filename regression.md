@@ -131,9 +131,6 @@ reg_test = GridSearchCV(KNeighborsRegressor(),
 # Fit will test all of the combinations
 reg_test.fit(X,y)
 
-# Fit will test all of the combinations
-reg_test.fit(X,y)
-
 # Best estimator and best parameters
 reg_test.best_score_
 reg_test.best_estimator_
