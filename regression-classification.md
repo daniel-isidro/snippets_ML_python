@@ -1,273 +1,585 @@
-# Regression
-
-## Linear Regression
-
-### Preparing data
+# Table of Contents
+* [0_Train-Test Data Split](#0_train-test-data-split)
+* [1_Models](#1_models)
+  * [1_1_Regression](#1_1_Regression)
+    * [1_1_1_Linear Regression](#1_1_1_Linear-Regression)
+    * [1_1_2_K-Nearest Neighbor Regressor_KNN)](#1_1_2_K-Nearest-Neighbor-Regressor_KNN)
+    * [1_1_3_Decision Tree Regressor](#1_1_3_Decision-Tree-Regressor)
+  * [1_2_Classification](#1_2_Classification)
+    * [1_2_1_Logistic Regression](#1_2_1_Logistic-Regression)
+    * [1_2_2_K Nearest Neighbor Classifier_KNN](#1_2_2_K-Nearest-Neighbor-Classifier_KNN)  
+    * [1_2_3_Support Vector Machine_SVM](#1_2_3_Support-Vector-Machine_SVM)
+    * [1_2_4_Decision_Tree_Classifier](#1_2_4_Decision-Tree-Classifier)
+* [2_Metrics](#2_Metrics)
+  * [2_1_Regression](#2_1_Regression)
+    * [2_1_1_MAE_Mean Absolute Error](#2_1_1_MAE_Mean-Absolute-Error)
+    * [2_1_2_MAPE_Mean Absolute Percentage Error](#2_1_2_MAPE_Mean-Absolute-Percentage-Error)
+    * [2_1_3_RMSE_Root Mean Squared Error](#2_1_3_RMSE_Root-Mean-Squared-Error)
+    * [2_1_4_Correlation](#2_1_4_Correlation)
+    * [2_1_5_Bias](#2_1_5_Bias)
+    * [2_1_6_Variance](#2_1_6_Variance)
+  * [2_2_Classification](#2_2_Classification)
+    * [2_2_1_Accuracy](#2_2_1_Accuracy)
+    * [2_2_2_Precision](#2_2_2_Precision)
+    * [2_2_3_Recall or Sensitivity](#2_2_3_Recall-or-Sensitivity)
+    * [2_2_4_F1 score](#2_2_4_F1-score)
+    * [2_2_5_Classification Report](#2_2_5_Classification-Report)
+    * [2_2_6_ROC Curve_Receiver Operating Characteristic Curve](#2_2_6_ROC-Curve_Receiver-Operating-Characteristic-Curve)
+    * [2_2_7_AUC_Area Under the Curve](#2_2_7_AUC_Area-Under-the-Curve)
+    * [2_2_8_Confusion Matrix](#2_2_8_Confusion-Matrix)
+* [3_Cross Validation Score](#3_Cross-Validation-Score)
+* [4_Testing Parameters](#4_Testing-Parameters)
+  * [4_1_GridSearchCV](#4_1_GridSearchCV)
+  * [4_2_RandomizedSearchCV](#4_2_RandomizedSearchCV)
+* [5_Ensemble Learning](#5_Ensemble-Learning)
+  * [5_1_VotingClassifier](#5_1_VotingClassifier)
+  * [5_2_Bagging or Bootstrap Aggregation](#5_2_Bagging-or-Bootstrap-Aggregation)
+  * [5_3_Random Forest Regressor](#5_3_Random-Forest-Regressor)
+  * [5_4_Random Forest Classifier](#5_4_Random-Forest-Classifier)  
+  * [5_5_Gradient Boosting Regressor](#5_5_Gradient-Boosting-Regressor)
+  * [5_6_Gradient Boosting Classifier](#5_6_Gradient-Boosting-Classifier)
+* [6_References](#6_References)
+  
+# 0_Train Test Data Split
+Create Training Set and Test Set with sklearn.
 ```python
-# Input
-X = df[['TotalSF']] # pandas DataFrame
-# Label
-y = df["SalePrice"] # pandas Series
+from sklearn.model_selection import train_test_split
+
+# Split data set
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.10)
 ```
 
-### Load the library
+# 1_Models
+## 1_1_Regression
+Input variables (**X**) must be pandas **Data Frame** <br />
+Output variable: (**y**) must be pandas **Series**
+### 1_1_1_Linear Regression
 ```python
 from sklearn.linear_model import LinearRegression
-```
 
-### Create an instance of the model
-```python
+# Create an instance of the model
 reg = LinearRegression()
-```
 
-### Fit the regressor
-```python
-reg.fit(X,y)
-```
+# Train the regressor
+reg.fit(X_train, y_train)
 
-### Do predictions
-```python
+# Do predictions
 reg.predict([[2540],[3500],[4000]])
-```
 
-## K nearest neighbors
+```
+### 1_1_2_K Nearest Neighbor Regressor_KNN
+**Parameters:**<br />
+- **k**: number of neighbors <br />
+- **weight**: way to give more weight to points which are nearby and less weight to the points which are farther away. <br />
+  * `'uniform'`: all the same weight.<br />
+  * `'distance'`: weighted average per distance. <br />
+  * `'Custom'`: weighted average provided by user
+
 ```python
-# Load the library
 from sklearn.neighbors import KNeighborsRegressor
-# Create an instance
-regk = KNeighborsRegressor(n_neighbors=2)
-# Fit the data
-regk.fit(X,y)
+
+# Create an instance.
+# Define number of neighbors.
+# weights possible values: 'uniform', 'distance', [callable] user defined function
+regk = KNeighborsRegressor(n_neighbors=2, weights = 'uniform')
+
+# Train the data
+regk.fit(X_train, y_train)
 ```
 
-## Decision Tree
-Main parameters
-* Max_depth: Number of Splits
-* Min_samples_leaf: Minimum number of observations per leaf
+### 1_1_3_Decision Tree Regressor
+Simple to understand, interpret and vizualise.
+
+**Parameters:**<br />
+- **max_depth**: number of splits <br />
+- **min_samples_leaf**: minimum number of samples for each split group
 
 ```python
-# Load the library
 from sklearn.tree import DecisionTreeRegressor
-# Create an instance
-regd = DecisionTreeRegressor(max_depth=3)
-# Fit the data
-regd.fit(X,y)
-```
-# Random Forest
-```python
-# Load the library
-from sklearn.ensemble import RandomForestRegressor
-# Create an instance
-clf = RandomForestRegressor(max_depth=4)
-# Fit the data
-clf.fit(X,y)
+
+# Create an instance.
+regd = DecisionTreeRegressor (max_depth = 3,
+                              min_samples_leaf=20)
+
+# Train the data
+regd.fit(X_train, y_train)
 ```
 
-# Gradient Boosting Tree
-```python
-# Load the library
-from sklearn.ensemble import GradientBoostingClassifier
-# Create an instance
-clf = GradientBoostingClassifier(max_depth=4)
-# Fit the data
-clf.fit(X,y)
-```
+## 1_2_Classification
+Output is a Class.
 
-# Classification
-## Logistic regression
+### 1_2_1_Logistic Regression
+
 ```python
 # Load the library
 from sklearn.linear_model import LogisticRegression
+
 # Create an instance of the classifier
-clf=LogisticRegression()
-# Fit the data
-clf.fit(X,y)
+clr=LogisticRegression()
+
+# Train the data
+clr.fit(X_train,y_train)
 ```
-## K nearest neighbors
+### 1_2_2_K Nearest Neighbor Classifier_KNN
+
+**Parameters:**<br />
+Same as K-Nearest Neighbor Regressor.
 ```python
 # Load the library
 from sklearn.neighbors import KNeighborsClassifier
-# Create an instance
-regk = KNeighborsClassifier(n_neighbors=2)
-# Fit the data
-regk.fit(X,y)
-```
 
-## Decision Tree
-```python
-# Import library
-from sklearn.tree import DecisionTreeClassifier
-# Create instance
-clf = DecisionTreeClassifier(min_samples_leaf=20,max_depth=3)
-# Fit the data
-clf.fit(X,y)
+# Create an instance of the classifier
+# parameter weights = 'uniform' as default
+regk = KNeighborsClassifier(n_neighbors=5)
+
+# Train the data 
+regk.fit(X_train, y_train)
 ```
-## Support Vector Machine
-Parameters:
-* C: Sum of Error Margins
-* kernel:
-* linear: line of separation
-* rbf: circle of separation
-* Additional param gamma: Inverse of the radius
-* poly: curved line of separation
-* Additional param degree: Degree of the polynome
+### 1_2_3_Support Vector Machine_SVM
+Tries to separate the classes by a line. This line can be straight, circle, and more.<br />
+It is computationally expensive so we will use it as a last option if the other models fail.
+
+**Parameters:**<br />
+- **C**: error margins. Large values = smaller margins. Small values = larger margins.
+- **kernel**: function that transforms the dimensional space so we can separate de data when there is a non-linear separation problem.
+  * `'linear'`: line of separation.
+  * `'poly'`: curved line of separation.
+  * `'rbf'`: circle of separation.
+- **degree**: degree of the polynomal kernel function (`'poly'`).
+
 ```python
-# Load the library
 from sklearn.svm import SVC
+
 # Create an instance of the classifier
 clf = SVC(kernel="linear",C=10)
-# Fit the data
-clf.fit(X,y)
-```
-# Random Forest
-```python
-# Load the library
-from sklearn.ensemble import RandomForestClassifier
-# Create an instance
-clf = RandomForestClassifier(max_depth=4)
-# Fit the data
-clf.fit(X,y)
+
+# Train the data
+clf.fit(X_train,y_train)
 ```
 
-# Gradient Boosting Tree
+### 1_2_4_Decision Tree Classifier
+Same Parameters as Decision Tree Regressor.
 ```python
-# Load the library
-from sklearn.ensemble import GradientBoostingClassifier
-# Create an instance
-clf = GradientBoostingClassifier(max_depth=4)
-# Fit the data
-clf.fit(X,y)
+from sklearn.tree import DecisionTreeClassifier
+clft = DecisionTreeClassifier(min_samples_leaf=20, max_depth=10)
+
+# Train the data
+clft.fit(X_train,y_train)
+```
+**Using GridSearchCV**
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+clft = GridSearchCV(DecisionTreeClassifier(),
+                  param_grid={"max_depth":np.arange(2,20), 
+                              "min_samples_leaf":np.arange(20,100,20)},
+                  cv=3,
+                  scoring="accuracy")
+# Train the data                
+clft.fit(X,y)
+
+clft.best_score_
+clft.best_params_
 ```
 
+# 2_Metrics
+## 2_1_Regression
+### 2_1_1_MAE_Mean Absolute Error
+Measures average magnitud of the errors without considering their direction (all errors in absolute value).
+It is intuitive to calculate, but you lose information related to the magnitud of the error.<br />
+Units are the same as the target variable.<br />
+Value range from 0 to infinite. Lower values are better.
 
-# Train-test split
+**Calculated with sklearn**
 ```python
-# Load the library
-from sklearn.model_selection import train_test_split
-# Create 2 groups each with input and labels
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10)
-# Fit only with training data
-reg.fit(X_train,y_train)
-```
-
-# Metrics
-## Regression
-
-### MAE
-```python
-# Load the scorer
 from sklearn.metrics import mean_absolute_error
+
 # Use against predictions
-mean_absolute_error(reg.predict(X_test),y_test)
+mean_absolute_error(reg.predict(X_test), y_test)
 ```
 
-### MAPE
+**Calculated manually with numpy**
 ```python
-np.mean(np.abs(reg.predict(X_test)-y_test)/y_test)
+import numpy as np
+
+# reg.predict(X_test) is the prediction
+myMAE = np.mean(np.abs(reg.predict(X_test) - y_test))
 ```
 
-### RMSE
+### 2_1_2_MAPE_Mean Absolute Percentage Error
+Similar to MAE but it measures the error in **percentage**.<br />
+Lower values are better.<br />
+**MAPE is not in sklearn so we calculate it MANUALLY with pandas:**
 ```python
-# Load the scorer
+import numpy as np
+
+myMAPE = np.mean(np.abs(reg.predict(X_test) - y_test)/y_test)
+```
+
+### 2_1_3_RMSE_Root Mean Squared Error
+Measures average magnitud of errors.<br />
+Units are the same as the target variable.<br />
+Value range from 0 to infinite. Lower values are better.
+
+```python
 from sklearn.metrics import mean_squared_error
-# Use against predictions (we must calculate the square root of the MSE)
-np.sqrt(mean_squared_error(reg.predict(X_test),y_test))
+
+# Use against predictions (we have to calculate the squared root of MSE)
+np.sqrt(mean_absolute_error(reg.predict(X_test), y_test))
 ```
 
-### Correlation
+| MAE vs RMSE |
+| ------------------- |
+| The square of RMSE minimizes errors < 1 and maximizes errors > 1. Meaning that if I have a moderate MAE but a big RMSE, there are a few points differing much from the prediction.
+MAE and RMSE are different magnitudes and we MUST calculate both. |
+
+### 2_1_4_Correlation
+It measures whether or not there is a relationship between two variables. There should be a strong correlation between predictions and real values.
+
+**With numpy**
 ```python
-# Direct Calculation
-np.corrcoef(reg.predict(X_test),y_test)[0][1]
-# Custom Scorer
-from sklearn.metrics import make_scorer
-def corr(pred,y_test):
-return np.corrcoef(pred,y_test)[0][1]
-# Put the scorer in cross_val_score
-cross_val_score(reg,X,y,cv=5,scoring=make_scorer(corr))
+import numpy as np
+
+# corrcoef() returns the correlation matrix.
+# when applied to two values, the element [0][1] will give us the correlation coefficient we are looking for
+# reg.predict(X_test) = predicted values
+
+np.corrcoef(reg.predict(X_test), y_test)[0][1]
 ```
 
-### Bias
+**With sklearn**
+
+This function is not implemented in sklearn but we could create our own scorer and use it together with 'cross_val_score()'.
 ```python
-# Direct Calculation
-np.mean(reg.predict(X_test)-y_test)
-# Custom Scorer
+import numpy as np
 from sklearn.metrics import make_scorer
-def bias(pred,y_test):
-return np.mean(pred-y_test)
-# Put the scorer in cross_val_score
-cross_val_score(reg,X,y,cv=5,scoring=make_scorer(bias))
+
+def mycorr(pred,y_test):
+  return np.corrcoef(pred,y_test)[0][1]
+
+cross_val_score(model,X,y,cv=5,scoring=make_scorer(mycorr)).mean()
 ```
-## Classification
-### Accuracy
+### 2_1_5_Bias
+It is the average of errors (prediction values minus real values).<br />
+Negative errors will compensate positive ones.<br />
+
+**With numpy**
 ```python
-# With Metrics
+import numpy as np
+
+# reg.predict(X_test) = predicted values
+
+np.mean(reg.predict(X_test) - y_test)
+```
+
+**With sklearn**
+
+This function is not implemented in sklearn but we could create our own scorer and use it together with 'cross_val_score()'.
+```python
+import numpy as np
+from sklearn.metrics import make_scorer
+
+def mybias(pred,y_test):
+  return np.mean(pred - y_test)
+
+cross_val_score(model,X,y,cv=5,scoring=make_scorer(mybias)).mean()
+```
+
+### 2_1_6_Variance
+Is the average of errors in predictions between two different data sets.
+
+```python
+import numpy as np
+
+np.mean(reg.predict(X_train) - reg.predict(X_test))
+```
+
+| Bias-Variance Tradeoff|
+| ------------------- |
+|- **High Bias** means that we are not capturing the complexity of the problem (**underfitting**).|
+|- **High Variance** means that we may be modelling the noise in the training set (**overfitting**). |
+
+## 2_2_Classification
+### 2_2_1_Accuracy
+It measures the overall predicted accuracy of the model in percentage.<br />
+It is calculated as `(True Positives + True Negatives)/(True Positives + True Negatives + False Positives + False Negatives)`
+
+```python
 from sklearn.metrics import accuracy_score
-accuracy_score(y_test,clf.predict(X_test))
-# Cross Validation
-cross_val_score(clf,X,y,scoring="accuracy")
+
+accuracy_score(y_test, clr.predict(X_test))
+
+# Or get a better Accuracy with Cross Validation
+from sklearn.model_selection import cross_val_score
+
+cross_val_score(clr,X,y,scoring="accuracy", cv=5).mean()
+```
+### 2_2_2_Precision
+It is like Accuracy but it only looks at data that you predicted positive.<br />
+It is calculated as `(True Positives)/(True Positives + False Positives)`
+
+```python
+from sklearn.metrics import precision_score
+
+precision_score(y_test,clf.predict(X_test))
+
+# With Croos Validation
+from sklearn.model_selection import cross_val_score
+
+cross_val_score(clf,X,y,scoring="precision").mean()
+```
+### 2_2_3_Recall or Sensitivity
+Ability of a model to find all the relevant cases within a dataset.<br />
+It is calculated as `(True Positives)/(True Positives + False Negatives)`
+
+```python
+from sklearn.metrics import recall_score
+
+recall_score(y_test, clf.predict(X_test))
+
+# With Croos Validation
+from sklearn.model_selection import cross_val_score
+
+cross_val_score(clf,X,y,scoring="recall").mean()
+```
+### 2_2_4_F1 score
+Harmonic mean of Precision and Recall. It measures if we have a good balance between Precision and Recall.<br />
+Value range from 0 (worst) to 1 (best).<br />
+It is calculated as `2*(Recall * Precision) / (Recall + Precision)`
+
+```python
+from sklearn.metrics import f1_score
+
+f1_score(y_test, clf.predict(X_test))
 ```
 
-### Precision and Recall
+### 2_2_5_Classification Report
+Builds a report showing Precision, Recall and F1-score of our model.
+
 ```python
-# Metrics
-from sklearn.metrics import precision_score, recall_score
-from sklearn.metrics import confusion_matrix, classification_report
-precision_score(y_test,clf.predict(X_test))
-classification_report(y_test,clf.predict(X_test))
-# Cross Validation
-cross_val_score(clf,X,y,scoring="precision")
-cross_val_score(clf,X,y,scoring="recall")
+from sklearn.metrics import classification_report
+
+print(classification_report(y_test,clf.predict(X_test)))
 ```
-### ROC curve
+### 2_2_6_ROC Curve_Receiver Operating Characteristic Curve
+It show how confident is your classifier with the area under the curve.
+
 ```python
-# Load the library
 from sklearn.metrics import roc_curve
+
+# Get predictions in form of probabilities
+pred = clf.best_estimator_.predict_proba(X_test)
+
 # We chose the target
 target_pos = 1 # Or 0 for the other class
 fp,tp,_ = roc_curve(y_test,pred[:,target_pos])
 plt.plot(fp,tp)
 ```
-#### AUC
+### 2_2_7_AUC_Area Under the Curve
+Value range from 0 to 1. Higher values are better. However if your AUC is below 0.5, you could invert all the outputs of your classifier and get a better score, so you did something wrong.<br />
+Once you have calculated the `roc_curve` from the point 2.2.6. above:
 ```python
-# Metrics
-from sklearn.metrics import roc_curve, auc
-fp,tp,_ = roc_curve(y_test,pred[:,1])
+from sklearn.metrics import auc
+
 auc(fp,tp)
-# Cross Validation
-cross_val_score(clf,X,y,scoring="roc_auc")
+
+# Or using Cross Validation
+cross_val_score(clr,X,y,scoring="roc_auc", cv=5).mean()
 ```
 
-# Cross Validation adn testing parameters
-
-## Cross Validation
+### 2_2_8_Confusion Matrix
+It is not a metric but it helps to see the distribution of your predictions.
 ```python
-# Load the library
-from sklearn.model_selection import cross_val_score
-# We calculate the metric for several subsets (determine by cv)
-# With cv=5, we will have 5 results from 5 training/test
-cross_val_score(reg,X,y,cv=5,scoring="neg_mean_squared_error")
+from sklearn.metrics import confusion_matrix
+
+confusion_matrix(y_test, clf.predict(X_test))
 ```
-## Grid Search
+
+# 3_Cross Validation Score
+Cross Validation helps you get more robust metrics.<br />
+It returns an array with all values. We can then calculate the mean of them.
+
+```python
+from sklearn.model_selection import cross_val_score
+
+cross_val_score(model, X, y, cv=5, scoring="neg_mean_squared_error").mean()
+# model = selected model
+# cv= number of training/test sets
+# X = inputs
+# y = output
+# scoring = scoring function
+```
+
+# 4_Testing Parameters
+## 4_1_GridSearchCV
+Search over a grid of parameters to find the best for your model. It returns an instance of the best model found. After this you need to train the model.
+
+**Example with KNeighborsRegressor()**
 ```python
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsRegressor
+
 reg_test = GridSearchCV(KNeighborsRegressor(),
-param_grid={"n_neighbors":np.arange(3,50)})
-# Fit will test all of the combinations
+                       param_grid={"n_neighbors":np.arange(3,50)},
+                       cv = 5,
+                       scoring = "neg_mean_absolute_error")
+                       
+# KNeighborsRegressor(): model I want to test
+# param_grid = dictionary with parameters and values needed for the grid. These are model specific
+# scoring = scoring function to evaluate
+                       
+# Train the model with the dataset
 reg_test.fit(X,y)
-# Best estimator and best parameters
+
+# Get valuable info from the model
 reg_test.best_score_
 reg_test.best_estimator_
 reg_test.best_params_
 ```
-## Randomized Grid Search
+**Example with Support Vector Machine**
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+
+clf = GridSearchCV(SVC(kernel="poly",),
+                  param_grid={"C":[1,10,100,1000,10000], "degree":[2,3,4,5]},
+                  cv=3,
+                  scoring="accuracy")
+
+# Train the model with the dataset
+clf.fit(X,y)
+```
+## 4_2_RandomizedSearchCV
+Your computer may crash if you try to find parameters iterating through a big grid. **RandomizedSearchCV** picks up a limited number of parameters randomly from your grid.
+
 ```python
 from sklearn.model_selection import RandomizedSearchCV
-reg = RandomizedSearchCV(DecisionTreeRegressor(),
-param_distributions={"max_depth":np.arange(2,8),
-"min_samples_leaf":[10,30,50,100]},
-cv=5,
-scoring="neg_mean_absolute_error",
-n_iter=5 )
+
+reg_dt_test = RandomizedSearchCV(DecisionTreeRegressor(),
+                                param_distributions={"max_depth":[2,3,5,8,10],
+                                           "min_samples_leaf":[5,10,15,20,30,40]},
+                                cv = 5,
+                                scoring="neg_mean_absolute_error",
+                                n_iter=5)
+
+# n_iter = how many random values I want to try from param_distributions
+
+# Train the model with the dataset
+reg_dt_test.fit(X,y)
+```
+# 5_Ensemble Learning
+Combination of multiple models in order to improve predictive accuracy.<br />
+It prevents overfitting.<br />
+It can be used in both Regression and Classification.<br />
+Random Forest and Gradient Boosting Tree are ensemble methods.
+
+## 5_1_VotingClassifier
+Combines multiple different models into a single model, which is (ideally) stronger than any of the individual models alone.
+The example below is created out of DecisionTreeClassifier and LogisticRegression:
+```python
+from sklearn.ensemble import VotingClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+
+# Specify voting classifiers as a list of (name, sub-estimator) 
+classifiers = [('dectree', DecisionTreeClassifier(min_samples_leaf=16, max_depth=4)),
+                ('log', LogisticRegression())]
+
+# Create VotingClassifier
+clf = VotingClassifier(estimators = classifiers)
+```
+## 5_2_Bagging or Bootstrap Aggregation
+It divides the dataset into subsets, sampling with replacement, fits a base estimator on each subset, and then aggregate their individual predictions.<br />
+
+```python
+from sklearn.ensemble import BaggingClassifier
+
+# base_estimator = KNeighborsClassifier in this example
+# n_estimators: number of subsets. We can start with 100, and if it improves the single model, increase to 500, 1000, ...
+# oob_score (Out Of Bag): set to True for small data sets. (default value = False)
+clf=BaggingClassifier(base_estimator=KNeighborsClassifier(n_neighbors=4),n_estimators=100,oob_score=True)
+
+# Train the model
+clf.fit(X,y)
+```
+## 5_3_Random Forest Regressor
+Enhanced version of Bagging, using Decision Trees.
+Sklearn has its own algorithm for Random Forest.
+
+**Parameters:**<br />
+- **n_estimators**: number of trees in the forest
+- **max_depth**: number of splits <br />
+- **min_samples_leaf**: minimum number of samples for each split group
+
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+# n_jobs: to specify how many concurrent processes/threads should be used. For -1, all CPUs are used.
+reg = RandomForestClassifier(max_depth=3,
+                             min_samples_leaf=20,
+                             n_estimators=100,
+                             n_jobs=-1)
+                            
+# Train the mdoel
 reg.fit(X,y)
 ```
+
+## 5_4_Random Forest Classifier
+Same parameters as Random Forest Regressor.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+# n_jobs: to specify how many concurrent processes/threads should be used. For -1, all CPUs are used.
+clf = RandomForestClassifier(max_depth=3,
+                             min_samples_leaf=20,
+                             n_estimators=100,
+                             n_jobs=-1)
+                            
+# Train the mdoel
+clf.fit(X,y)
+```
+
+## 5_5_Gradient Boosting Regressor
+**Parameters:**<br />
+- **n_estimators**: number of trees in the forest.
+- **learning_rate**: how much correction do I keep from the precious model. Small values (<= 0.1) lead to much better generalization error.
+- **max_depth**: number of splits.
+- **min_samples_leaf**: minimum number of samples for each split group.
+```python
+from sklearn.ensemble import GradientBoostingRegressor
+
+regGBT = GradientBoostingRegressor(max_depth=4,
+                                min_samples_leaf=20,
+                                n_estimators=100,
+                                learning_rate=0.1)
+```
+Example using GridSearchCV:
+```python
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import GridSearchCV
+
+reg = GridSearchCV(GradientBoostingRegressor(n_estimators=50),
+                  param_grid={"max_depth":np.arange(2,10),
+                             "learning_rate":np.arange(1,10)/10},
+                  scoring="neg_mean_absolute_error",
+                  cv=5)
+```
+
+## 5_6_Gradient Boosting Classifier
+Same parameters as Gradient Boosting Regressor.
+
+```python
+from sklearn.ensemble import GradientBoostingClassifier
+
+clfGBT = GradientBoostingClassifier(max_depth=4,
+                                   min_samples_leaf=20,
+                                   n_estimators=100,
+                                   learning_rate=0.1)
+```   
+
+# 6_References
+https://github.com/Beovulfo/snippets3/blob/master/ML_python.md<br />
+https://examples.dask.org/ <br />
+https://scikit-learn.org <br />
+https://machinelearningmastery.com/configure-gradient-boosting-algorithm/
