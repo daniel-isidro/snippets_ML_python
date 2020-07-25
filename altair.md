@@ -66,6 +66,39 @@ color=alt.Color("temp",scale=alt.Scale(range=["red","orange","lightblue"]))
 background+cities
 ```
 
+# Text
+
+```python
+cities_viz = alt.Chart(cities).mark_text(
+    font="Cardo",
+    fontSize=11,
+    fontStyle="italic",
+    dx=3
+).encode(
+    latitude="lat",
+    longitude="lon",
+    text="city"
+).properties(
+    width=800
+)
+```
+
+# Trail
+
+```python
+troops_viz = alt.Chart(troops).mark_trail(
+    strokeCap="SQUARE"
+).encode(
+    latitude="lat",
+    longitude="lon",
+    color=alt.Color("direction",scale=alt.Scale(domain=['A', 'R'],range=["#EBD2A8","#888888"])),
+    size=alt.Size("survivors",scale=alt.Scale(range=[1,75])),
+    detail="division"
+).properties(
+    width=800
+)
+```
+
 # Horizontal concatenation
 
 ```python
