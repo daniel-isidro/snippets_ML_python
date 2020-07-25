@@ -48,18 +48,22 @@ trends_line=alt.Chart(trends).mark_line().encode(
 # Map
 
 ```python
-alt.Chart(cities).mark_text(
-    font="Cardo",
-    fontSize=11,
-    fontStyle="italic",
-    dx=3
-).encode(
-    latitude="lat",
-    longitude="lon",
-    text="city"
-).properties(
-    width=800
+countries = alt.topo_feature("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json", feature="countries") 
+
+background = alt.Chart(countries).mark_geoshape(
+fill="lightgrey", 
+stroke="white" 
 )
+
+temp = weather_df.groupby("city").mean().reset_index() 
+cities = alt.Chart(temp).mark_point().encode( 
+latitude="lat", 
+longitude="long", 
+size=alt.value(1), 
+color=alt.Color("temp",scale=alt.Scale(range=["red","orange","lightblue"])) 
+)
+
+background+cities
 ```
 
 # Horizontal concatenation
