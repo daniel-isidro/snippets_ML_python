@@ -47,6 +47,21 @@ trends_line=alt.Chart(trends).mark_line().encode(
 
 # Map
 
+```python
+alt.Chart(cities).mark_text(
+    font="Cardo",
+    fontSize=11,
+    fontStyle="italic",
+    dx=3
+).encode(
+    latitude="lat",
+    longitude="lon",
+    text="city"
+).properties(
+    width=800
+)
+```
+
 # Horizontal concatenation
 
 ```python
