@@ -1,4 +1,4 @@
-# Import altair
+# Import Altair
 
 ```python
 import altair as alt
@@ -106,4 +106,10 @@ trends_line_small=alt.Chart(trends).mark_line().encode(
 )
 
 (trends_line&trends_line_small)
+```
+
+# Overriding 5000 rows limitation
+
+```python
+temp = weather_df.groupby('country').mean().reset_index()
 ```
