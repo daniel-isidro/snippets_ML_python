@@ -288,14 +288,14 @@ q = qs.values()
 df = pd.DataFrame.from_records(q)
 ```
 
-Pandas Snippets
+# Pandas Snippets
 
-Recommended Practices
+## Recommended Practices
 
 loc command is the most recommended way to set values for a column for specific indices.
 plot
 
-subplot
+## subplot
 
 fig = plt.figure(figsize = (16, 6), dpi = 80)
 ax1 = fig.add_subplot(131)  
@@ -339,14 +339,14 @@ line
 df[df['col1'] == m].plot(x = 'col2', y = ['col3', 'col4'], figsize = (16,9))
 read
 
-# from  list of dict 
+## from  list of dict 
 df = pd.DataFrame.from_records(list_dict)
 datetime func
 
-# read and convert to datatime64 format
+## read and convert to datatime64 format
 df= pd.read_csv(filepath, parse_dates=['col1','col2'], infer_datetime_formate = True)
 
-# to_datetime
+## to_datetime
 df['col'] = pd.to_datetime(df['col'], format = '%Y/%m/%d %H:%M')
 
 
@@ -360,7 +360,7 @@ df['hour_col'] = df['time_col'].dt.hour
 df['day_of_year_col'] = df['time_col].dt.dayofyear
 df.loc[:, 'minutes_cols'] = (df.loc[:, 'off_time'] - df.loc[:, 'on_time']).apply(lambda x: x.seconds / 60)
 
-# label on holiday and weekday
+## label on holiday and weekday
 def labelOnDate(date):
     holiday_list = []
     workday_list = [0, 1, 2, 3, 4]
@@ -376,7 +376,7 @@ def labelOnDate(date):
 
 df['label_on_date'] = df['date_cols'].apply(labelOnDate)
 
-# reserve datetimes's hours and minutes
+## reserve datetimes's hours and minutes
 def time_exper_transfer(x):
     if pd.notna(x):
         return x.hour + x.minute / 60
@@ -386,12 +386,12 @@ def time_exper_transfer(x):
 day_df['first_on_time_hour'] = day_df['first_on_time'].apply(time_exper_transfer)
 
 
-# type convertion
-## from object to datetime64[ns]
+## type convertion
+### from object to datetime64[ns]
 import datetime as dt
 df['dt64_date'] = df['oj_date'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d'))
 
-# resample
+## resample
 
 tmp = arr.resample('W').sum()
 
@@ -400,12 +400,12 @@ unchanged shape operations for a dataframe
 
 operation on rows or columns
 
-# block sample
+## block sample
 def block_sample(df=pd.DataFrame(), block_size = 6, num_samples = 3):
     samples = [df.iloc[x: x + block_size] for x in np.random.randint(len(df), size = num_samples)]
 
 
-# find specific rows or columns
+## find specific rows or columns
 trip_df[(trip_df['odo_dif'] == 0) & (trip_df['did_time'] < pd.Timedelta('00:03:00')) & (trip_df['dis_soc'] < 0.3))]
 
 
@@ -418,18 +418,18 @@ df.isnull().sum().sort_values(ascending = False)
 
 all_df['on_odo'].astype(bool).sum(axis = 0)
 
-## change sequence
+### change sequence
 df = df.sort_values(by = ['col1', 'col2'], axis = 0, ascending = [True, True])
 
-## str operations
+### str operations
 df = df[df['cols'].str.contains('specfic_words | other_words1 | other_words2')]
-# remove single quotes
+## remove single quotes
 df['str_cols'] = df['str_cols'].str.replace("'", "")
-# concat columns
+## concat columns
 df['str_concat_col'] = df['str1'].str.cat(df['str2'], sep = '-')
 change shape operations for a dataframe
 
-# add columns based on other columns values or diff values bet rows
+## add columns based on other columns values or diff values bet rows
 df['last_row_diff'] = df['cols_2'] - df.groupby['col_1']['col_2'].shift(1) 
 def add_label(row):
     if row['col_1'] >= pd.Timedelta('00:10:00'):
@@ -439,13 +439,13 @@ def add_label(row):
     return np.nan;
 df['label'] = df.apply(lambda row: add_label(row), axis = 1)
 
-# delete
+## delete
 all_df.drop_duplicate(subset=['vin', 'on_time'], keep = 'first', inplace = True)
 
-# filter
+## filter
 tm_vin = charge_days_series[charge_days_series > 12].index.values
 all_df = all_df[all_df['vin].isin(tm_vin)] 
-# all_df = all_df[~all_df['vin].isin(tm_vin)]
+## all_df = all_df[~all_df['vin].isin(tm_vin)]
 shift within group
 
 shift down values by rows within a group
@@ -465,26 +465,26 @@ sort by multiply columns
 charge_df.sort_values(['vin', 'on_time'], ascending = ['True', 'True'], inplace = True)
 add/delete columns
 
-# based on  other columns of other rows
+## based on  other columns of other rows
 def diffFunc(arr):
     return (arr - arr.shift(1)).apply(lambda x:x.days)
 df['diff_days'] = df.groupby('bycol').transform(diffFunc).fillna(0)
 
-# based on other columns within same rows
+## based on other columns within same rows
 df['new_col'] = df.apply(lambda x: x['col1'] / x['col2'], axis = 1)
 
-# delete duplicate
+## delete duplicate
 df.drop_duplicates()
 
-# add columns based on 'windows-like' rows
+## add columns based on 'windows-like' rows
 df['windows_key_list'] = pd.Series(df['key'].str.cat([df.groupby(['bycol']).shift(-i)['key'] for i in range(1, windows_size)], sep = ' ')
 
-# add columns based 'str-value' column 
+## add columns based 'str-value' column 
 def lenOfStr(x):
     return len(str(x).split())
 df['new_col'] = df['str_col'].apply(lenOfStr)
 
-# add columns  counting depulicated times across rows
+## add columns  counting depulicated times across rows
 def countRepeat(x, duplicate_times):
     if pd.isnull(x):
         return np.nan
@@ -495,32 +495,32 @@ def countRepeat(x, duplicate_times):
 df['filter_duplicate_item'] = df['duplicate_str_col'].apply(countRepeat, args = (duplicate_times, ))
 changes columns values
 
-# fill zero value with other columns values
+## fill zero value with other columns values
 charge_df['on_odo'] = np.where(charge_df['on_odo'] == 0, charge_df['off_odo'], charge_df['on_odo'])
 
-# replace
+## replace
 df['cols'] = df['cols'].replace({0 : np.nan})
 
-# fillna with mean
+## fillna with mean
 df['cols'] = df['cols'].fillna(df.groupby(['vin', 'on_odo'])['cols'].transform('mean'))
 
-# fillna 
+## fillna 
 df['cols'].fillna(method='ffill', inplace = True)
 
-# fillna with 0
+## fillna with 0
 df.update(df['cols'].fillna(0))
 
-# fillna with mean within group
+## fillna with mean within group
 def replace(g):
     mask = g == 0
     g[mask] = g[~mask].mean()
     return g
 
 df['gnss'] = df.groupby(['vin', 'on_odo'])['gnss'].transform(replace)
-# or
+## or
 df['gnss'] = df.groupby(['vin', 'on_odo'])['gnss'].transform(lambda x: x.where(x != 0).fillna(x[x != 0].mean()))
 
-# fill with other columns values of last row 
+## fill with other columns values of last row 
 cond = ((df['on_odo'] != 0) & (df['on_odo'] == df['off_odo'].shift(1)))
 df['on_gnss'] = df['on_gnss'].mask(cond).fillna(method = 'ffill')
 create a dataframe based on a dataframe
@@ -538,7 +538,7 @@ df_gby = df.groupby('bycol')
 df_temp = df_gby.apply(func)
 agg
 
-# groupby + agg
+## groupby + agg
 df_gby_agg = df.groupby('col1').sum().reset_index()
 basic agg on many columns groupby one column
 agg_df = df.groupby('vin).agg({
@@ -557,7 +557,7 @@ def head_ind(x):
 df = df.groupby(['bycol1', 'bycol2']).agg({'col1': 'min', 'cols2': 'max',
                                           'col2': [('total', np.sum), ('head', head_ind)]}).reset_index()
 df.columns = df.columns.map('_'.join)
-# or as follows
+## or as follows
 df_temp = df[['col1', 'col2']].groupby(['bycol']).agg({'col1':[func1, func2],
 'col2':[('func1', func1), ('func2', func2)]})
 df_temp.columns = df_temp.columns.get_level_values(1)
@@ -565,7 +565,7 @@ concat
 
 df = pd.concat(df1.iloc[m1:m2, :],df2.iloc[m1:m2, :], ignore_index = True)
 
-# concat by adding columns
+## concat by adding columns
 merge_df = pd.concat([df0, df1, df2], axis = 1)
 merge
 
@@ -574,14 +574,14 @@ operations on index
 
 charge_df.reset_index(drop=True, inplace = True)
 
-# change columns sequence
+## change columns sequence
 col_names = ['col1', 'col2', 'col3', 'col4']
 df = df.reindex(columns = col_names)
 
-# 
+## 
 df.columns = df.columns.map('_'.join)
 
-# change name
+## change name
 df.rename(columns = {'old_col1': 'new_col1'}, axis = 1, inplace = True)
 count
 
